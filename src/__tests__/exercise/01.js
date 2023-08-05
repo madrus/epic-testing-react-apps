@@ -3,8 +3,8 @@
 
 import * as React from 'react'
 // import ReactDOM from 'react-dom'
-import {act} from 'react-dom/test-utils'
-import {createRoot} from 'react-dom/client'
+import { act } from 'react-dom/test-utils'
+import { createRoot } from 'react-dom/client'
 import Counter from '../../components/counter'
 
 // NOTE: this is a new requirement in React 18
@@ -56,7 +56,7 @@ test('counter increments and decrements when the buttons are clicked', () => {
   // 🐨 cleanup by removing the div from the page (💰 div.remove())
   // div.remove()
   // 🦉 If you don't cleanup, then it could impact other tests and/or cause a memory leak
-	// instead of doing div.remove(), we can better add a beforeEach function => see above
+  // instead of doing div.remove(), we can better add a beforeEach function => see above
 })
 
 /* eslint no-unused-vars:0 */

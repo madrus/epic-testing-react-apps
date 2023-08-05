@@ -2,9 +2,8 @@
 // http://localhost:3000/counter
 
 import * as React from 'react'
-import {act} from 'react-dom/test-utils'
 // 🐨 import the `render` and `fireEvent` utilities from '@testing-library/react'
-import {fireEvent, render} from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import Counter from '../../components/counter'
 
 // NOTE: this is a new requirement in React 18
@@ -20,7 +19,7 @@ test('counter increments and decrements when the buttons are clicked', () => {
   // bunch of utilities on it. For now, let's just grab `container` which is
   // the div that React Testing Library creates for us.
   // 💰 const {container} = render(<Counter />)
-  const {container} = render(<Counter />)
+  const { container } = render(<Counter />)
 
   // 🐨 instead of `div` here you'll want to use the `container` you get back
   // from React Testing Library

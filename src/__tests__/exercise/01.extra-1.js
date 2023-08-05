@@ -2,8 +2,8 @@
 // http://localhost:3000/counter
 
 import * as React from 'react'
-import {act} from 'react-dom/test-utils'
-import {createRoot} from 'react-dom/client'
+import { act } from 'react-dom/test-utils'
+import { createRoot } from 'react-dom/client'
 import Counter from '../../components/counter'
 
 // NOTE: this is a new requirement in React 18
@@ -41,7 +41,7 @@ test('counter increments and decrements when the buttons are clicked', () => {
 
   act(() => decrement.dispatchEvent(clickEvent))
 
-	expect(message.textContent).toBe('Current count: 0')
+  expect(message.textContent).toBe('Current count: 0')
 })
 
 /* eslint no-unused-vars:0 */
