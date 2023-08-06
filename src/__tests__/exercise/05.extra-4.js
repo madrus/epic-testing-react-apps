@@ -10,6 +10,7 @@ import {
 import { faker } from '@faker-js/faker'
 import { build, perBuild } from '@jackfranklin/test-data-bot'
 import userEvent from '@testing-library/user-event'
+import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 import { handlers } from '../../test/server-handlers'
 import Login from '../../components/login-submission'
@@ -33,6 +34,7 @@ const buildLoginForm = build({
 const server = setupServer(...handlers)
 
 beforeAll(() => server.listen())
+afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
 it(`logging in displays the user's username`, async () => {
@@ -49,6 +51,31 @@ it(`logging in displays the user's username`, async () => {
   expect(screen.getByText(username)).toBeInTheDocument()
 })
 
+it(`getting error code 500 from the server displays a one-off error message`, async () => {
+  const testErrorMessage = 'Oh no, something bad happened'
+  server.use(
+    rest.post(
+      // note that it's the same URL as our app-wide handler
+      // so this will override the other.
+      'https://auth-provider.example.com/api/login',
+      async (req, res, ctx) => {
+        return res(
+          ctx.delay(10),
+          ctx.status(500),
+          ctx.json({ message: testErrorMessage }),
+        )
+      },
+    ),
+  )
+  const { user } = setup(<Login />)
+
+  await user.click(screen.getByRole('button', { name: /submit/i }))
+  await waitForElementToBeRemoved(screen.getByLabelText(/loading/i))
+  // screen.debug()
+
+  expect(screen.getByRole('alert')).toHaveTextContent(testErrorMessage)
+})
+
 it(`not filling in the user's username shows an error message re. missing username`, async () => {
   const { user } = setup(<Login />)
   const { password } = buildLoginForm({
@@ -59,7 +86,6 @@ it(`not filling in the user's username shows an error message re. missing userna
 
   await user.type(screen.getByLabelText(/password/i), password)
   await user.click(screen.getByRole('button', { name: /submit/i }))
-
   await waitForElementToBeRemoved(screen.getByLabelText(/loading/i))
   // screen.debug()
 
@@ -78,7 +104,6 @@ it(`not filling in the user's password shows an error message re. missing passwo
 
   await user.type(screen.getByLabelText(/username/i), username)
   await user.click(screen.getByRole('button', { name: /submit/i }))
-
   await waitForElementToBeRemoved(screen.getByLabelText(/loading/i))
   // screen.debug()
 
@@ -91,7 +116,6 @@ it(`leaving all fields empty shows an error message re. missing password`, async
   const { user } = setup(<Login />)
 
   await user.click(screen.getByRole('button', { name: /submit/i }))
-
   await waitForElementToBeRemoved(screen.getByLabelText(/loading/i))
   // screen.debug()
 
