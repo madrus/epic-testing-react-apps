@@ -40,7 +40,7 @@ const server = setupServer(
     'https://auth-provider.example.com/api/login',
     async (req, res, ctx) => {
 			const { username } = req.body
-      return res(ctx.json({ username }))
+      return res(ctx.delay(10), ctx.json({ username }))
     },
   ),
 )
