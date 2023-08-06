@@ -32,8 +32,8 @@ test('submitting the form calls onSubmit with username and password', async () =
   // 🐨 get the username and password fields via `getByLabelText`
   // 🐨 use `await userEvent.type...` to change the username and password fields to
   //    whatever you want
-  await userEvent.type(screen.getByLabelText(/username/i), username)
-  await userEvent.type(screen.getByLabelText(/password/i), password)
+  await user.type(screen.getByLabelText(/username/i), username)
+  await user.type(screen.getByLabelText(/password/i), password)
 
   // 🐨 click on the button with the text "Submit"
   await user.click(screen.getByRole('button', { name: /submit/i }))
