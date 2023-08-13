@@ -9,6 +9,10 @@ import Location from '../../examples/location'
 
 jest.mock('react-use-geolocation')
 
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
 function setup(jsx) {
   return {
     user: userEvent.setup(),
@@ -27,7 +31,6 @@ test('displays the users current location', () => {
       longitude: 4,
     },
   }
-
   let setReturnValue
   function useMockCurrentPosition() {
     // our state is an array because useCurrentPosition returns an array
@@ -38,7 +41,7 @@ test('displays the users current location', () => {
   useCurrentPosition.mockImplementation(useMockCurrentPosition)
 
   // 🐨 now that setup is done, render the Location component itself
-  const { user } = setup(<Location />)
+  setup(<Location />)
 
   // 🐨 verify the loading spinner is showing up
   // 💰 tip: try running screen.debug() to know what the DOM looks like at this point.
@@ -62,7 +65,38 @@ test('displays the users current location', () => {
   )
 })
 
-/*
-eslint
-	no-unused-vars: "off",
-*/
+test('displays the error message', () => {
+  const fakePosition = {
+    coords: {
+      latitude: 52,
+      longitude: 4,
+    },
+  }
+  const errorMessage = 'Something went wrong!'
+  const fakeError = {
+    message: errorMessage,
+  }
+  let setReturnValue
+  function useMockCurrentPosition() {
+    // our state is an array because useCurrentPosition returns an array
+    const state = React.useState([])
+    setReturnValue = state[1] // second element in state array is the setter
+    return [null, fakeError]
+  }
+  useCurrentPosition.mockImplementation(useMockCurrentPosition)
+
+  setup(<Location />)
+
+  expect(screen.getByLabelText(/loading/i)).toBeInTheDocument()
+
+  act(() => {
+    setReturnValue([fakePosition])
+  })
+
+  // screen.debug()
+
+  expect(screen.queryByRole('alert')).toHaveTextContent(fakeError.message)
+})
+
+// eslint
+//  	no-unused-vars: "off"
