@@ -72,12 +72,15 @@ test('displays the users current location', async () => {
   // 🐨 you'll call the callback when the deferred promise resolves
   window.navigator.geolocation.getCurrentPosition.mockImplementation(
     callback => {
-      promise.then(() => callback(fakePosition))
+      promise.then(() => {
+        console.log('promise resolved')
+        callback(fakePosition)
+      })
     },
   )
 
   // 🐨 now that setup is done, render the Location component itself
-  const { user } = setup(<Location />)
+  setup(<Location />)
 
   // 🐨 verify the loading spinner is showing up
   // 💰 tip: try running screen.debug() to know what the DOM looks like at this point.
@@ -93,7 +96,7 @@ test('displays the users current location', async () => {
     await promise
   })
 
-  // screen.debug()
+  screen.debug()
 
   // If you'd like, learn about what this means and see if you can figure out
   // how to make the warning go away (tip, you'll need to use async act)
