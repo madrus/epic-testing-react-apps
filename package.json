@@ -1,10 +1,10 @@
 {
   "name": "testing-react-applications-workshop",
   "title": "Testing React Applications 🧐",
+  "private": true,
+  "version": "1.0.0",
   "description": "Learn how to test react components and applications",
   "author": "Kent C. Dodds <me@kentcdodds.com> (https://kentcdodds.com/)",
-  "version": "1.0.0",
-  "private": true,
   "license": "GPL-3.0",
   "main": "index.js",
   "engines": {
@@ -78,7 +78,6 @@
   "bugs": {
     "url": "https://github.com/kentcdodds/testing-react-app/issues"
   },
-  "homepage": "https://testing-react-app.netlify.app",
   "browserslist": [
     ">0.2%",
     "not dead",
