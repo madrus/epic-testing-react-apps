@@ -20,45 +20,73 @@ function setup(jsx) {
 // capabilities of this hook
 // 💰 here's how to use the hook:
 // const {count, increment, decrement} = useCounter()
-function TestCounter(props) {
-	const { count, increment, decrement } = useCounter()
+function UseCounterHookExample({ initialCount = 0, step = 1 }) {
+  const { count, increment, decrement } = useCounter({ initialCount, step })
 
   return (
     <>
-      <div>
-        {`count value: ${count}`}
-      </div>
-      <button onClick={increment}>increment</button>
-      <button onClick={decrement}>decrement</button>
+      <div>Count value: {count}</div>
+      <button onClick={decrement}>Decrement</button>
+      <button onClick={increment}>Increment</button>
     </>
   )
 }
 
 test('exposes the count and increment/decrement functions', async () => {
   // 🐨 render the component
-	const { user } = setup(<TestCounter />)
+  const { user } = setup(<UseCounterHookExample />)
 
-	// 🐨 get the elements you need using screen
-  const text = screen.getByText(/count value/i)
-  const plus = screen.getByRole('button', { name: 'increment' })
-  const minus = screen.getByRole('button', { name: 'decrement' })
+  // 🐨 get the elements you need using screen
+  const message = screen.getByText(/count value/i)
+  const increment = screen.getByRole('button', { name: /increment/i })
+  const decrement = screen.getByRole('button', { name: /decrement/i })
 
-  expect(text).toBeInTheDocument()
-  expect(plus).toBeInTheDocument()
-  expect(minus).toBeInTheDocument()
+  expect(message).toBeInTheDocument()
+  expect(increment).toBeInTheDocument()
+  expect(decrement).toBeInTheDocument()
   // screen.debug()
 
   // 🐨 assert on the initial state of the hook
-  expect(text).toHaveTextContent('count value: 0')
+  expect(message).toHaveTextContent(/count value: 0/i)
 
   // 🐨 interact with the UI using userEvent and assert on the changes in the UI
-	await user.click(plus )
+  await user.click(increment)
 
-	expect(text).toHaveTextContent('count value: 1')
+  expect(message).toHaveTextContent(/count value: 1/i)
 
-	await user.click(minus )
+  await user.click(decrement)
 
-	expect(text).toHaveTextContent('count value: 0')
+  expect(message).toHaveTextContent(/count value: 0/i)
 })
 
-/* eslint no-unused-vars:0 */
+test('exposes the count as equal to its initialValue = 10', async () => {
+  // 🐨 render the component
+  setup(<UseCounterHookExample initialCount={10} />)
+
+  // 🐨 get the elements you need using screen
+  const message = screen.getByText(/count value/i)
+
+  expect(message).toHaveTextContent(/count value: 10/i)
+})
+
+test('increments and decrements with the custom step = 10', async () => {
+  // 🐨 render the component
+  const { user } = setup(<UseCounterHookExample step={10} />)
+
+  // 🐨 get the elements you need using screen
+  const message = screen.getByText(/count value/i)
+  const increment = screen.getByRole('button', { name: /increment/i })
+  const decrement = screen.getByRole('button', { name: /decrement/i })
+
+  // 🐨 assert on the initial state of the hook
+  expect(message).toHaveTextContent(/count value: 0/i)
+
+  // 🐨 interact with the UI using userEvent and assert on the changes in the UI
+  await user.click(increment)
+
+  expect(message).toHaveTextContent(/count value: 10/i)
+
+  await user.click(decrement)
+})
+
+// eslint no-unused-vars:0
